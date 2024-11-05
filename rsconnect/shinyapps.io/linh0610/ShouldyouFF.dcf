@@ -5,9 +5,9 @@ account: linh0610
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13243642
-bundleId: 9320259
+bundleId: 9320465
 url: https://linh0610.shinyapps.io/ShouldyouFF/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .ipynb_checkpoints/Lol prediction-checkpoint.ipynb|.RData|creat_app.R|data/champion_info.json|data/champion_info_2.json|data/games.csv|data/summoner_spell_info.json|Lol prediction.ipynb|lol_LASSO_min_AUC.pkl|README.md|.idea|dir
+ignoredFiles: .ipynb_checkpoints/Lol prediction-checkpoint.ipynb|Lol prediction.ipynb|README.md|.idea

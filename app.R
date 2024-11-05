@@ -9,31 +9,54 @@ model <- readRDS("lol_LASSO_min_AUC.rds")
 
 # Load required libraries
 ui <- fluidPage(
-  titlePanel("Should you ff bruh"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("firstBlood", "First Blood:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      selectInput("firstTower", "First Tower:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      selectInput("firstInhibitor", "First Inhibitor:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      selectInput("firstBaron", "First Baron:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      selectInput("firstDragon", "First Dragon:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      selectInput("firstRiftHerald", "First Rift Herald:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2)),
-      numericInput("t1_towerKills", "Blue side Tower Kills:", 0, min = 0),
-      numericInput("t1_inhibitorKills", "Blue side Inhibitor Kills:", 0, min = 0),
-      numericInput("t1_baronKills", "Blue side Baron Kills:", 0, min = 0),
-      numericInput("t1_dragonKills", "Blue side Dragon Kills:", 0, min = 0),
-      numericInput("t1_riftHeraldKills", "Blue side Rift Herald Kills:", 0, min = 0),
-      numericInput("t2_towerKills", "Red side Tower Kills:", 0, min = 0),
-      numericInput("t2_inhibitorKills", "Red side Inhibitor Kills:", 0, min = 0),
-      numericInput("t2_baronKills", "Red side Baron Kills:", 0, min = 0),
-      numericInput("t2_dragonKills", "Red side Dragon Kills:", 0, min = 0),
-      numericInput("t2_riftHeraldKills", "Red side Rift Herald Kills:", 0, min = 0),
-      actionButton("predict", "Predict")
+  titlePanel("The anti Azzap mentality"),
+  
+  # Create a fluid row for layout
+  fluidRow(
+    # Left sidebar for Blue side inputs
+    column(3,
+           wellPanel(
+             h4("Blue Side"),
+             
+             numericInput("t1_towerKills", "Tower Kills:", 0, min = 0, max= 11, width = '100%'),
+             numericInput("t1_inhibitorKills", "Inhibitor Kills:", 0, min = 0, width = '100%'),
+             numericInput("t1_baronKills", "Baron Kills:", 0, min = 0, width = '100%'),
+             numericInput("t1_dragonKills", "Dragon Kills:", 0, min = 0, width = '100%'),
+             numericInput("t1_riftHeraldKills", "Rift Herald Kills:", 0, min = 0, max = 1, width = '100%')
+           )
     ),
-    mainPanel(
-      h4("Prediction Result:"),
-      verbatimTextOutput("prediction")
+    
+    # Center area for objectives
+    column(6,
+           wellPanel(
+             h4("Objectives"),
+             selectInput("firstBlood", "First Blood:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             selectInput("firstTower", "First Tower:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             selectInput("firstInhibitor", "First Inhibitor:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             selectInput("firstBaron", "First Baron:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             selectInput("firstDragon", "First Dragon:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             selectInput("firstRiftHerald", "First Rift Herald:", choices = c("No Team" = 0, "Blue side" = 1, "Red side" = 2), width = '100%'),
+             actionButton("predict", "Predict", style = "width: 100%; height: 50px; font-size: 18px;")
+           )
+    ),
+    
+    # Right sidebar for Red side inputs
+    column(3,
+           wellPanel(
+             h4("Red Side"),
+             numericInput("t2_towerKills", "Tower Kills:", 0, min = 0,max= 11, width = '100%'),
+             numericInput("t2_inhibitorKills", "Inhibitor Kills:", 0, min = 0, width = '100%'),
+             numericInput("t2_baronKills", "Baron Kills:", 0, min = 0, width = '100%'),
+             numericInput("t2_dragonKills", "Dragon Kills:", 0, min = 0, width = '100%'),
+             numericInput("t2_riftHeraldKills", "Rift Herald Kills:", 0, min = 0,max = 1, width = '100%')
+           )
     )
+  ),
+  
+  # Main panel for displaying the prediction result
+  mainPanel(
+    h4("Prediction Result:"),
+    verbatimTextOutput("prediction", placeholder = TRUE)
   )
 )
 
@@ -70,21 +93,14 @@ server <- function(input, output) {
     prob_team_1 <- prediction * 100  # Convert to percentage
     prob_team_2 <- (1 - prediction) * 100  # Convert to percentage
     
-    # Show the prediction result
+    # Show the prediction result at the top
     output$prediction <- renderPrint({
       result_1 <- paste("Blue side is likely to win: ", round(prob_team_1, 2), "%", sep = "")
       result_2 <- paste("Red side is likely to win: ", round(prob_team_2, 2), "%", sep = "")
-      
-      # Combine the results into a single string with a newline
-      paste(result_1, result_2, sep = "-")
+      cat(result_1, "\n", result_2)
     })
   })
 }
 
 # Run the application
 shinyApp(ui = ui, server = server)
-
-
-
-
-
